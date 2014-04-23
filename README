@@ -13,20 +13,20 @@ let g:Gtags_Auto_Update = 1
 
 Make  a file  name is clang_pro  at the root of your c/c++ project,write lines as below.When you want get define,just push ',' and 'd' keys on the word.push ',' and 'c' for callers.When add . :: -> complete menu will pop up for you. You can also use key ctrl-x-o make the complete menu pop up manully. When any thing wrong, use key ctrl-x-u ,you can see clang debug info at quickfix window.
 
-This plugin only use clang not libclang.so,it give method to use project file auto make a pch file for speed, if it is still slow, you can  write line in your .vimrc or in clang_pro file at root of your project .
+This plugin only use clang not libclang.so,it give method to use project file auto make a pch file for speed, most of time it quick enough ,if it is   slow for your project, you can  write line in your .vimrc or in clang_pro file at root of your project .
 let g:clang_auto = 0  "only when you need ,ctrl-x-o to complete it.
 other lines can add:
 let g:clang_exe= 'clang'  "you can use other clang name
 let g:clang_project = 'clang_pro'   "you can change the project file.
 To other configure, make them in project file may better.like:
 let g:clang_use_global = 1
-let g:clang_options = '-I "E:"Microsoft Visual Studio\VC98\Include" '
+let g:clang_options = '-I "E:"Microsoft Visual Studio\VC98\Include" -I ./include '
 let g:clang_use_pch="#include <vector>\n#include <list>"
 
 When the script start ,it will find the clang_pro file and make it work,so can write any vim settings in it .
  If you want a project which can quickly find define and callers ,write line:
 let g:clang_use_global = 1,
-GNU GLOBAL will make a GTAGS in the root of project, you canuse the abililities of it.
+GNU GLOBAL will make a GTAGS in the root of project, you can use the abilities of it.
  You can use let g:clang_options to make clang work right, most of time ,include -I and macro define -D is needed.
 And if the c/c++ header file is large for compile,you can use  g:clang_use_pch add pch file for clang, use \n to split these headers. 
 You can use ctrl-x-u to get the clang err info at quickfix window, so the quickfix windows will not pop at  auto complete.

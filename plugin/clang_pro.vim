@@ -50,9 +50,9 @@ func! s:ClangInit()
 	setl completefunc=ClangDebug    "ctrl-x-u
 	setl omnifunc=ClangComplete			"ctrl-x-o
 
-	let l:cwd = fnameescape(getcwd())
-	let l:fwd = fnameescape(expand('%:p:h'))
-	exe 'lcd ' . l:fwd
+	let b:cwd = fnameescape(getcwd())
+	let b:fwd = fnameescape(expand('%:p:h'))
+	exe 'lcd ' . b:fwd
 
 	let l:pro  = findfile(g:clang_project, '.;')
 	if filereadable(l:pro)
@@ -62,26 +62,31 @@ func! s:ClangInit()
 			exe 	l:line	
 		endfor
 		
-		let l:pro_root = fnameescape(fnamemodify(l:pro, ':p:h'))   
-		exe 'lcd ' . l:pro_root		
-		if exists('g:clang_use_pch')    
-			let l:tmp_h  = l:pro_root . "/temp_clang_pro.h"			
-			call writefile(split(g:clang_use_pch,'\n'),l:tmp_h )
-
-			let l:pch  = l:pro_root . "/clang_pro.pch"
-			let l:command = printf('%s -x c++-header %s -fno-exceptions -fnu-runtime -o %s',g:clang_exe,l:tmp_h,l:pch)
-			let l:clang_output = system(l:command)
-			call delete(l:tmp_h)
-			let g:clang_options .= '-include-pch ' . l:pch . '-fgnu-runtime' 
+		let b:pro_root = fnameescape(fnamemodify(l:pro, ':p:h'))   
+		exe 'lcd ' . b:pro_root		
+		if exists('g:clang_use_pch')
+			let l:pch  = b:pro_root . "/clang_pro.pch"
+			if !filereadable('clang_pro.pch')        
+				let l:tmp_h  = b:pro_root . "/temp_clang_pro.h"			
+				call writefile(split(g:clang_use_pch,'\n'),l:tmp_h )	
+				let l:command = printf('%s -x c++-header %s -fno-exceptions -fnu-runtime -o %s',g:clang_exe,l:tmp_h,l:pch)
+				let l:clang_output = system(l:command)
+				call delete(l:tmp_h)
+			endif
+			let g:clang_options .= ' -include-pch ' . l:pch 
 		endif
 
 		if g:clang_use_global
 			if !filereadable('GTAGS')    
-				exe '!export GTAGSFORCECPP=1;gtags ' 
+				if has('win32')&&(&shell=~'cmd')
+					call system( 'set GTAGSFORCECPP=1 & gtags' )
+				else
+					call system( 'export GTAGSFORCECPP=1;gtags' )
+				endif 
 			endif
 		endif
 	endif  	
-	exe 'lcd ' . l:fwd  
+	exe 'lcd ' . b:fwd  
 	"cd to current sourcefile path for gnu global can work well 
 
 	if &filetype == 'c'
@@ -154,7 +159,8 @@ func! ClangComplete(findstart, base)
 endf
 
 func! s:ClangExecute(clang_options, line, col)
-	let l:src = shellescape(expand('%:p:.'))
+"	let l:src = shellescape(expand('%:p:.'))
+	let l:src = shellescape(expand('%:p'))
 	let l:command = printf('%s -cc1 -fsyntax-only -code-completion-macros -code-completion-at=%s:%d:%d %s %s',
 				\ g:clang_exe, l:src, a:line, a:col, a:clang_options, l:src)
 	let l:tmps = [tempname(), tempname()]
@@ -165,8 +171,9 @@ func! s:ClangExecute(clang_options, line, col)
 		call writefile([l:command],s:cmd_tmpfile,"b")
 		let l:command= '"' . s:cmd_tmpfile . '"'   
 	endif
-
+	exe 'lcd ' . b:pro_root		
 	call system(l:command)
+	exe 'lcd ' . b:fwd  
 	let l:res = []
 	let l:i = 0
 	while l:i < len(l:tmps)
