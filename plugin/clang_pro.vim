@@ -85,6 +85,8 @@ func! s:ClangInit()
 				endif 
 			endif
 		endif
+	else
+		let b:pro_root = b:fwd   
 	endif  	
 	exe 'lcd ' . b:fwd  
 	"cd to current sourcefile path for gnu global can work well 

@@ -2,9 +2,9 @@ This is a mirror of http://www.vim.org/scripts/script.php?script_id=4928
 
 This plugin use clang to complete c/c++ codes ,and use gnu global(work better than cscope for c++ and can work  for java and php) make a project to find define and callers. 
 
-All of the codes in the file are less than 200 lines. So it is small but powerful.Everyone know vim script can read this plug and change it for yourself. That is vim's power ,do it yourself. I use it work well for ubuntu 12.04 and old winxp machine, it may work well on mac X too.
+All of the codes in the file are less than 200 lines. So it is small but powerful.Everyone know vim script can read this plugin and change it for yourself. That is vim's power ,do it yourself. I use it work well for ubuntu 12.04 and old winxp machine, it may work well on mac X too.
 Any one fix bug or use it on mac X give me a email at xieyong88881@163.com  ,i will happy.
-For get the all utilities of the plug,make install clang and gnu global,and put gtags.vim  in the source of global into your .vim/plugin. I use these lines in my .vimrc:
+For get the all utilities of the plugin,make install clang and gnu global,and put gtags.vim  in the source of global into your .vim/plugin. I use these lines in my .vimrc:
 
 nmap ,d :Gtags -a <C-R>=expand("<cword>")<CR><CR>   
 nmap ,c :Gtags -a -r <C-R>=expand("<cword>")<CR><CR>   
@@ -30,5 +30,5 @@ GNU GLOBAL will make a GTAGS in the root of project, you can use the abilities o
  You can use let g:clang_options to make clang work right, most of time ,include -I and macro define -D is needed.
 And if the c/c++ header file is large for compile,you can use  g:clang_use_pch add pch file for clang, use \n to split these headers. 
 You can use ctrl-x-u to get the clang err info at quickfix window, so the quickfix windows will not pop at  auto complete.
-It is better to make get err info alone. 
+It is better to make the function of getting err info alone. 
 
