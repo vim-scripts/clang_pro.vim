@@ -56,7 +56,9 @@ func! s:ClangInit()
 
 	let l:pro  = findfile(g:clang_project, '.;')
 	if filereadable(l:pro)
-
+		com! ClangSetSession   call <SID>ClangSetSession()
+		com! ClangGetSession   call <SID>ClangGetSession()
+		
 		let l:file = readfile(l:pro)
 		for l:line in l:file
 			exe 	l:line	
@@ -97,9 +99,10 @@ func! s:ClangInit()
 		let g:clang_options .= ' -x c++ '
 	endif
 
-	" Useful to re-initialize plugin if .clang_pro is changed
+	" Use it when re-initialize plugin if .clang_pro is changed
 	com! ClangInit   call <SID>ClangInit()
-	com! ClangDebug   call <SID>ClangDebug(0,"")
+	" use it when want to see clang err info in normall mode  
+	com! ClangDebug   call ClangDebug(0,"")
 
 	if g:clang_auto   " Auto completion
 		inoremap <expr> <buffer> . <SID>CompleteDot()
@@ -186,4 +189,11 @@ func! s:ClangExecute(clang_options, line, col)
 	return l:res
 endf
 
+func!  s:ClangSetSession()
+        exec "mks! ".b:pro_root."/ClangSession.vim"			   
+endf
+
+func!  s:ClangGetSession()	
+        exe "source " . b:pro_root . "/ClangSession.vim"
+endf
 
