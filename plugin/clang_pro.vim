@@ -16,7 +16,7 @@ if !exists('g:clang_project')
 endif
 
 if !exists('g:clang_use_global')
-	let g:clang_use_global = 0
+	let g:clang_use_global = 1
 endif
 
 if !empty('completeopt')
@@ -164,7 +164,6 @@ func! ClangComplete(findstart, base)
 endf
 
 func! s:ClangExecute(clang_options, line, col)
-"	let l:src = shellescape(expand('%:p:.'))
 	let l:src = shellescape(expand('%:p'))
 	let l:command = printf('%s -cc1 -fsyntax-only -code-completion-macros -code-completion-at=%s:%d:%d %s %s',
 				\ g:clang_exe, l:src, a:line, a:col, a:clang_options, l:src)
@@ -190,7 +189,7 @@ func! s:ClangExecute(clang_options, line, col)
 endf
 
 func!  s:ClangSetSession()
-        exec "mks! ".b:pro_root."/ClangSession.vim"			   
+        exe "mks! ".b:pro_root."/ClangSession.vim"			   
 endf
 
 func!  s:ClangGetSession()	
