@@ -81,9 +81,9 @@ func! s:ClangInit()
 		if g:clang_use_global
 			if !filereadable('GTAGS')    
 				if has('win32')&&(&shell=~'cmd')
-					call system( 'set GTAGSFORCECPP=1 & gtags' )
+					call system( 'set GTAGSFORCECPP=1 & start gtags' )
 				else
-					call system( 'export GTAGSFORCECPP=1;gtags' )
+					call system( 'export GTAGSFORCECPP=1;gtags&' )
 				endif 
 			endif
 		endif
