@@ -23,7 +23,7 @@ if !empty('completeopt')
 	exe 'set completeopt=menuone,longest'
 endif
 
-au FileType c,cpp call <SID>ClangInit()
+au FileType c,cpp,java call <SID>ClangInit()
 
 func! s:CompleteDot()
 	if getline('.')[col('.') - 2]=~# '[_0-9a-zA-Z]'
@@ -47,8 +47,11 @@ func! s:CompleteColon()
 endf
 
 func! s:ClangInit()
-	setl completefunc=ClangDebug    "ctrl-x-u
-	setl omnifunc=ClangComplete			"ctrl-x-o
+	if &filetype == 'java'
+		setl omnifunc=javacomplete#Complete		"ctrl-x-o
+	else
+		setl omnifunc=ClangComplete			"ctrl-x-o
+	endif
 
 	let b:cwd = fnameescape(getcwd())
 	let b:fwd = fnameescape(expand('%:p:h'))
@@ -105,10 +108,14 @@ func! s:ClangInit()
 	com! ClangDebug   call ClangDebug(0,"")
 
 	if g:clang_auto   " Auto completion
-		inoremap <expr> <buffer> . <SID>CompleteDot()
-		inoremap <expr> <buffer> > <SID>CompleteArrow()
-		if &filetype == 'cpp'
-			inoremap <expr> <buffer> : <SID>CompleteColon()
+		if &filetype == 'java'  " Auto completion  java
+		   inoremap <expr> <buffer> . <SID>CompleteDot()
+		else
+                   inoremap <expr> <buffer> . <SID>CompleteDot()
+		   inoremap <expr> <buffer> > <SID>CompleteArrow()
+			if &filetype == 'cpp'   " Auto completion  cpp
+				inoremap <expr> <buffer> : <SID>CompleteColon()
+			endif
 		endif
 	endif
 endf
