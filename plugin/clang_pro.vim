@@ -19,6 +19,10 @@ if !exists('g:clang_use_global')
 	let g:clang_use_global = 1
 endif
 
+if !exists('g:clang_auto_path_set')
+	let g:clang_auto_path_set=1
+endif
+
 if !empty('completeopt')
 	exe 'set completeopt=menuone,longest'
 endif
@@ -46,6 +50,29 @@ func! s:CompleteColon()
 	return ':'
 endf
 
+func! s:ClangGtagsCscope()
+    set csprg=gtags-cscope
+    let s:command = "cs add " . b:pro_root . "/GTAGS"
+    let s:option = ''
+    let s:option = s:option . 'C'   "ignore case
+    let s:option = s:option . 'a'  "absolute path
+    let s:option = s:option . 'i'  "keep alive
+    let s:command = s:command . ' . -' . s:option
+    set nocscopeverbose
+    exe s:command
+    set cscopeverbose
+endf
+
+func! s:HCppSwitch()
+	let l:name=expand('%:e')
+	if (l:name=='h') || (l:name=='hpp') || (l:name=='H')
+		exe "cs find f ".expand('%:t:r').".c" 
+	endif
+	if (l:name=='c') || (l:name=='cpp') || (l:name=='cxx') || (l:name=='C') || (l:name=='CPP')
+		exe "cs find f ".expand('%:t:r').".h" 
+	endif
+endf
+
 func! s:ClangInit()
 	if &filetype == 'java'
 		setl omnifunc=javacomplete#Complete		"ctrl-x-o
@@ -57,10 +84,11 @@ func! s:ClangInit()
 	let b:fwd = fnameescape(expand('%:p:h'))
 	exe 'lcd ' . b:fwd
 
-	let l:pro  = findfile(g:clang_project, '.;')
+	let l:pro  = findfile(g:clang_project, '.;')       "recursive find file from parent dir
 	if filereadable(l:pro)
 		com! ClangSetSession   call <SID>ClangSetSession()
 		com! ClangGetSession   call <SID>ClangGetSession()
+		com! HCppSwitch call <SID>HCppSwitch()
 		
 		let l:file = readfile(l:pro)
 		for l:line in l:file
@@ -69,6 +97,11 @@ func! s:ClangInit()
 		
 		let b:pro_root = fnameescape(fnamemodify(l:pro, ':p:h'))   
 		exe 'lcd ' . b:pro_root		
+		
+		if g:clang_auto_path_set
+			exe 'set path+='.b:pro_root.'/**'     
+		endif
+
 		if exists('g:clang_use_pch')
 			let l:pch  = b:pro_root . "/clang_pro.pch"
 			if !filereadable('clang_pro.pch')        
@@ -89,6 +122,7 @@ func! s:ClangInit()
 					call system( 'export GTAGSFORCECPP=1;gtags&' )
 				endif 
 			endif
+			call s:ClangGtagsCscope()
 		endif
 	else
 		let b:pro_root = b:fwd   
