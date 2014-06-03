@@ -23,6 +23,11 @@ if !exists('g:clang_auto_path_set')
 	let g:clang_auto_path_set=1
 endif
 
+if !exists('g:clang_auto_map')
+	let g:clang_auto_map=1
+endif
+
+
 if !empty('completeopt')
 	exe 'set completeopt=menuone,longest'
 endif
@@ -236,4 +241,12 @@ endf
 func!  s:ClangGetSession()	
         exe "source " . b:pro_root . "/ClangSession.vim"
 endf
+
+if g:clang_auto_map == 1
+	nmap ,d :Gtags -a <C-R>=expand("<cword>")<CR><CR>  
+	nmap ,r :Gtags -a -r <C-R>=expand("<cword>")<CR><CR>   
+	nmap ,s :Gtags -a -s <C-R>=expand("<cword>")<CR><CR>   
+	let g:Gtags_Auto_Update = 1
+	nmap ,h :HCppSwitch<CR>
+endif
 

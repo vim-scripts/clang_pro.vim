@@ -7,11 +7,10 @@ Any one fix bug or use it on mac X give me a email at xieyong88881@163.com  ,i w
 For get the all utilities of the plugin,make install clang and gnu global,and put gtags.vim  in the source of global into your .vim/plugin. I use these lines in my .vimrc:
 
 nmap ,d :Gtags -a <C-R>=expand("<cword>")<CR><CR>   
-nmap ,c :Gtags -a -r <C-R>=expand("<cword>")<CR><CR>   
-nmap ,s :Gtags -a -s <C-R>=expand("<cword>")<CR><CR>  
+nmap ,r :Gtags -a -r -s<C-R>=expand("<cword>")<CR><CR>     
 let g:Gtags_Auto_Update = 1 
 
-Make  a file  name is clang_pro  at the root of your c/c++/java project,write lines as below.When you want get define,just push ',' and 'd' keys on the word.push ',' and 'c' for callers.When add . :: -> complete menu will pop up for you. You can also use key ctrl-x-o make the complete menu pop up manully. When any thing wrong, use key ctrl-x-u ,you can see clang debug info at quickfix window.
+Make  a file  name is clang_pro  at the root of your c/c++/java project,write lines as below.When you want get define,just push ',' and 'd' keys on the word.push ',' and 'r' for callers.When add . :: -> complete menu will pop up for you. You can also use key ctrl-x-o make the complete menu pop up manully. When any thing wrong, use key ctrl-x-u ,you can see clang debug info at quickfix window.
 
 This plugin only use clang not libclang.so,it give method to use project file auto make a pch file for speed, most of time it quick enough ,if it is   slow for your project, you can  write line in your .vimrc or in clang_pro file at root of your project .
 let g:clang_auto = 0  "only when you need ,ctrl-x-o to complete it.
