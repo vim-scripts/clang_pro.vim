@@ -27,7 +27,6 @@ if !exists('g:clang_auto_map')
 	let g:clang_auto_map=1
 endif
 
-
 if !empty('completeopt')
 	exe 'set completeopt=menuone,longest'
 endif
@@ -91,8 +90,8 @@ func! s:ClangInit()
 
 	let l:pro  = findfile(g:clang_project, '.;')       "recursive find file from parent dir
 	if filereadable(l:pro)
-		com! ClangSetSession   call <SID>ClangSetSession()
-		com! ClangGetSession   call <SID>ClangGetSession()
+		com! ClangSaveSession   call <SID>ClangSaveSession()
+		com! ClangLoadSession   call <SID>ClangLoadSession()
 		com! HCppSwitch call <SID>HCppSwitch()
 		
 		let l:file = readfile(l:pro)
@@ -234,19 +233,20 @@ func! s:ClangExecute(clang_options, line, col)
 	return l:res
 endf
 
-func!  s:ClangSetSession()
+func!  s:ClangSaveSession()
         exe "mks! ".b:pro_root."/ClangSession.vim"			   
 endf
 
-func!  s:ClangGetSession()	
+func!  s:ClangLoadSession()	
         exe "source " . b:pro_root . "/ClangSession.vim"
 endf
 
 if g:clang_auto_map == 1
 	nmap ,d :Gtags -a <C-R>=expand("<cword>")<CR><CR>  
-	nmap ,r :Gtags -a -r <C-R>=expand("<cword>")<CR><CR>   
-	nmap ,s :Gtags -a -s <C-R>=expand("<cword>")<CR><CR>   
+	nmap ,r :Gtags -a -r -s <C-R>=expand("<cword>")<CR><CR>   	   
 	let g:Gtags_Auto_Update = 1
 	nmap ,h :HCppSwitch<CR>
+	nmap ,s :ClangSaveSession<CR>
+	nmap ,l :ClangLoadSession<CR>
 endif
 
