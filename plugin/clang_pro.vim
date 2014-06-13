@@ -248,5 +248,6 @@ if g:clang_auto_map == 1
 	nmap ,h :HCppSwitch<CR>
 	nmap ,s :ClangSaveSession<CR>
 	nmap ,l :ClangLoadSession<CR>
+	nmap ,m :make<CR>
 endif
 
