@@ -196,6 +196,8 @@ func! ClangComplete(findstart, base)
 		let l:s = stridx(l:line, ':', 13)
 		let l:word  = l:line[12 : l:s-2]
 		let l:proto = l:line[l:s+2 : -1]
+		let l:proto = substitute(l:proto, '\(<#\)\|\(#>\)\|#', '', 'g') 
+		"remove # in the complete line
 
 		if l:baselen == 0
 			call add(l:res, { 'word': l:word,'menu': l:proto,'info': l:proto, 'dup' : 1 })
