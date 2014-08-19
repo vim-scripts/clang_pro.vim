@@ -72,7 +72,7 @@ func! s:HCppSwitch()
 	if (l:name=='h') || (l:name=='hpp') || (l:name=='H')
 		exe "cs find f ".expand('%:t:r').".c" 
 	endif
-	if (l:name=='c') || (l:name=='cpp') || (l:name=='cxx') || (l:name=='C') || (l:name=='CPP')
+	if (l:name=='c') || (l:name=='cpp') || (l:name=='cc') || (l:name=='cxx') || (l:name=='C') || (l:name=='CPP') 
 		exe "cs find f ".expand('%:t:r').".h" 
 	endif
 endf

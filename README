@@ -7,11 +7,15 @@ All of the codes in the file are only less than 300 lines. So it is small but po
 Any one fix bug or use it on mac X give me a email at xieyong88881@163.com  ,i will happy.
 
 For get the all utilities of the plugin,make install clang and gnu global,and put gtags.vim  in the source of global into your .vim/plugin. 
-Make  a file  name is clang_pro  at the root of your c/c++/java project.
-As default key bindings,when you want get define,just push ',' and 'd' keys on the word.push ',' and 'r' for callers.
-push ',' and 'h' for h/c,cpp switch.push ',' and 's' for save sessions.push ',' and 'l' for load sessions.
+Make  a file  name is clang_pro  at the root of your c/c++/java project.(all source file in it's dir or child dir)
+As default key bindings,when you open a source file(.h .c .cpp .cc .cxx .java)
+push ',' and 'd' keys on the word for define.
+push ',' and 'r' for references.
+push ',' and 'h' for h/c,cpp switch.
+push ',' and 's' for save sessions.
+push ',' and 'l' for load sessions.
 push ',' and 'm' for will build the project using makeprg.
-When add . :: -> complete menu will pop up for you. You can also use key ctrl-x-o make the complete menu pop up manully. When any thing wrong, use key ctrl-x-u ,you can see clang debug info at quickfix window.
+When add . :: -> complete menu will pop up for you. You can also use key ctrl-x-o make the complete menu pop up manully.
 
 clang_pro file will work well for keys ,d ,r ,h ,s ,l functions with nothing in it,but for c/c++/java auto complete,it may need compile info lines like: 
 set makeprg=source\ env.sh;make
