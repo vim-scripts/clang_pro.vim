@@ -93,6 +93,7 @@ func! s:ClangInit()
 		com! ClangSaveSession   call <SID>ClangSaveSession()
 		com! ClangLoadSession   call <SID>ClangLoadSession()
 		com! HCppSwitch call <SID>HCppSwitch()
+		com! ClangErr call <SID>ClangErr()
 		
 		let l:file = readfile(l:pro)
 		for l:line in l:file
@@ -142,8 +143,6 @@ func! s:ClangInit()
 
 	" Use it when re-initialize plugin if .clang_pro is changed
 	com! ClangInit   call <SID>ClangInit()
-	" use it when want to see clang err info in normall mode  
-	com! ClangDebug   call ClangDebug(0,"")
 
 	if g:clang_auto   " Auto completion
 		if &filetype == 'java'  " Auto completion  java
@@ -158,19 +157,16 @@ func! s:ClangInit()
 	endif
 endf
 
-func! ClangDebug(findstart, base)   
-	if a:findstart
-		silent update!
-		return col('.')
-	endif  
-	let [l:clang_stdout, l:clang_stderr]=s:ClangExecute( g:clang_options, line('.'), col('.')) 
-	cgete l:clang_stderr  "out quickfix window
-	if len(l:clang_stderr)
-		exe "copen"
+func! s:ClangErr()   
+	if &filetype == 'java'
+	else
+		let [l:clang_stdout, l:clang_stderr]=s:ClangExecute( g:clang_options, 0, 0) 
+		cgete l:clang_stderr  "out quickfix window
+		if len(l:clang_stderr)
+			exe "copen"
+		endif
 	endif
-	let l:res = []
-	return l:res    "out complete menu
-endf
+	endf
 
 func! ClangComplete(findstart, base)  
 	if a:findstart
@@ -212,8 +208,12 @@ endf
 
 func! s:ClangExecute(clang_options, line, col)
 	let l:src = shellescape(expand('%:p'))
-	let l:command = printf('%s -cc1 -fsyntax-only -code-completion-macros -code-completion-at=%s:%d:%d %s %s',
+	if (a:line==0)&&(a:col==0)
+		let l:command = printf('%s -c -w -fsyntax-only  %s %s',g:clang_exe,a:clang_options,l:src)
+	else
+		let l:command = printf('%s -cc1 -fsyntax-only -code-completion-macros -code-completion-at=%s:%d:%d %s %s',
 				\ g:clang_exe, l:src, a:line, a:col, a:clang_options, l:src)
+	endif
 	let l:tmps = [tempname(), tempname()]
 	let l:command .= ' 1>'.l:tmps[0].' 2>'.l:tmps[1]
 
@@ -251,5 +251,6 @@ if g:clang_auto_map == 1
 	nmap ,s :ClangSaveSession<CR>
 	nmap ,l :ClangLoadSession<CR>
 	nmap ,m :make<CR>
+	nmap ,e :ClangErr<CR>
 endif
 
