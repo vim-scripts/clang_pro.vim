@@ -19,13 +19,14 @@ push ',' and 'm' for will build the project using makeprg.
 When add . :: -> complete menu will pop up for you. You can also use key ctrl-x-o make the complete menu pop up manully.
 
 clang_pro file will work well for keys ,d ,r ,h ,s ,l functions with nothing in it,but for c/c++/java auto complete,it may need compile info lines like: 
-"for cpp
-set makeprg=source\ env.sh;make
+"for c/cpp project
+set makeprg=export\ PATH=$PATH:/opt/buildroot-gcc342/bin;cd\ ~/wifidog;make 
 let g:clang_options = '-I ./include -I /opt/lib/include'
-"or for java
-"set makeprg=ant
+"or for java project
+"set makeprg=ant\ -find
+"set efm=%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
 "let g:java_classpath='.:/skyics/ics/out/host/common/obj/JAVA_LIBRARIES/layoutlib_intermediates/classes'
-With right settings in clang_pro file for your project.  the ",m" key binding.and auto complete when meeting . -> :: will work well.
+With right settings in clang_pro file for your project.  the ",m" ",e"key binding.and auto complete when meeting . -> :: will work well.
 
 This plugin only use clang not libclang.so,it give method to use project file auto make a pch file for speed, most of time it quick enough ,if it is   slow for your project, you can  write line in your .vimrc or in clang_pro file at root of your project .
 let g:clang_auto = 0  "only when you need ,ctrl-x-o to complete it.

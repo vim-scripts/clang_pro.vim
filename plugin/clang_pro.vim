@@ -159,12 +159,13 @@ endf
 
 func! s:ClangErr()   
 	if &filetype == 'java'
+		let [l:clang_stdout, l:clang_stderr]=s:ClangExecute( g:clang_options, 0, 1) 
 	else
 		let [l:clang_stdout, l:clang_stderr]=s:ClangExecute( g:clang_options, 0, 0) 
+	endif
 		cgete l:clang_stderr  "out quickfix window
 		if len(l:clang_stderr)
 			exe "copen"
-		endif
 	endif
 	endf
 
@@ -211,8 +212,13 @@ func! s:ClangExecute(clang_options, line, col)
 	if (a:line==0)&&(a:col==0)
 		let l:command = printf('%s -c -w -fsyntax-only  %s %s',g:clang_exe,a:clang_options,l:src)
 	else
-		let l:command = printf('%s -cc1 -fsyntax-only -code-completion-macros -code-completion-at=%s:%d:%d %s %s',
-				\ g:clang_exe, l:src, a:line, a:col, a:clang_options, l:src)
+		if (a:line==0)&&(a:col==1)
+			let l:command = printf('javac -d ~/ -classpath %s %s',g:java_classpath,l:src)
+			"let l:command = printf('javac -d /tmp  %s',l:src)
+		else
+			let l:command = printf('%s -cc1 -fsyntax-only -code-completion-macros -code-completion-at=%s:%d:%d %s %s',
+					\ g:clang_exe, l:src, a:line, a:col, a:clang_options, l:src)
+		endif
 	endif
 	let l:tmps = [tempname(), tempname()]
 	let l:command .= ' 1>'.l:tmps[0].' 2>'.l:tmps[1]
