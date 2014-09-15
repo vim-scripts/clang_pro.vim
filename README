@@ -19,9 +19,11 @@ push ',' and 'm' for will build the project using makeprg.
 When add . :: -> complete menu will pop up for you. You can also use key ctrl-x-o make the complete menu pop up manully.
 
 clang_pro file will work well for keys ,d ,r ,h ,s ,l functions with nothing in it,but for c/c++/java auto complete,it may need compile info lines like: 
-"for c/cpp project,notice for cpp,notice for cpp need add  stdlib path
-set makeprg=export\ PATH=$PATH:/opt/buildroot-gcc342/bin;cd\ ~/wifidog;make 
-let g:clang_options = ' -I /usr/include/c++/4.8/  -I /usr/include/x86_64-linux-gnu/c++/4.8/   -I  ~/test/cpp/include'
+"for c/cpp project,notice for cpp need add  stdlib path
+set makeprg=cd\ ~/pro;make 
+let g:clang_options = ' -std=c++11 -I /usr/include/c++/4.8/  -I /usr/include/x86_64-linux-gnu/c++/4.8/   -I  ~/test/cpp/include'
+"for windows env
+"let g:clang_options = ' -std=c++11 -fms-extensions -fms-compatibility -I "C:\Program Files\Microsoft Visual Studio 10.0\VC\include" '
 "or for java project
 "set makeprg=ant\ -find
 "set efm=%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
@@ -35,8 +37,8 @@ other lines can add:
 let g:clang_auto_map=0  "close default keys bindings
 let g:clang_exe= 'clang'  "you can use other clang name
 let g:clang_project = 'clang_pro'   "you can change the project file.
-To other configure, make them in project file may better.like:
-let g:clang_options = '-I "E:"Microsoft Visual Studio\VC98\Include" -I ./include '
+To other configure, make them in clang_pro file may better.like:
+let g:clang_options = ' -std=c++11 -fms-extensions -fms-compatibility -I "C:\Program Files\Microsoft Visual Studio 10.0\VC\include" '
 let g:clang_use_pch="#include <vector>\n#include <list>"
 
 When the script start ,it will find the clang_pro file and make it work,so can write any vim settings in it .

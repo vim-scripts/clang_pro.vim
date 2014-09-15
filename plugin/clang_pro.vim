@@ -138,7 +138,7 @@ func! s:ClangInit()
 	if &filetype == 'c'
 		let g:clang_options .= ' -x c '
 	elseif &filetype == 'cpp'
-		let g:clang_options .= ' -x c++ '
+		let g:clang_options .= ' -x c++ -std=c++11 '
 	endif
 
 	" Use it when re-initialize plugin if .clang_pro is changed
@@ -192,6 +192,9 @@ func! ClangComplete(findstart, base)
 		"in stdout start is COMPLETION: len is 12 follow with name : proto
 		let l:s = stridx(l:line, ':', 13)
 		let l:word  = l:line[12 : l:s-2]
+		if l:word[0]=='_'
+			continue
+		endif
 		let l:proto = l:line[l:s+2 : -1]
 		let l:proto = substitute(l:proto, '\(<#\)\|\(#>\)\|#', '', 'g') 
 		"remove # in the complete line
