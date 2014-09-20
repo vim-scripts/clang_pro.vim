@@ -17,6 +17,7 @@ push ',' and 'l' for load sessions.
 push ',' and 'e' for error info.
 push ',' and 'm' for will build the project using makeprg.
 When add . :: -> complete menu will pop up for you. You can also use key ctrl-x-o make the complete menu pop up manully.
+For new version,add a smart tab complete，can work as ctrl-x-o，select for complete menu,and finish a smart code template for c/c++/java ,you can close it by using let g:clang_auto_tab=0
 
 clang_pro file will work well for keys ,d ,r ,h ,s ,l functions with nothing in it,but for c/c++/java auto complete,it may need compile info lines like: 
 "for c/cpp project,notice for cpp need add  stdlib path

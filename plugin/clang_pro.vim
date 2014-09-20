@@ -27,6 +27,10 @@ if !exists('g:clang_auto_map')
 	let g:clang_auto_map=1
 endif
 
+if !exists('g:clang_auto_tab')
+	let g:clang_auto_tab=1
+endif
+
 if !empty('completeopt')
 	exe 'set completeopt=menuone,longest'
 endif
@@ -262,6 +266,85 @@ if g:clang_auto_map == 1
 	nmap ,m :make<CR>
 	nmap ,e :ClangErr<CR>
 endif
+
+
+"使用tab完成模板，代码ctrl-x-o完成，选取完成菜单，大括号分行
+if g:clang_auto_tab == 1
+	inoremap <tab> <c-r>=TemplateComplete()<cr><c-r>=SwitchRegion()<CR>
+endif
+let s:var_name=""
+let s:template_name=""
+
+function! SwitchRegion()
+    if strlen(s:var_name) != 0
+	let pos=line('.')
+	exe "%s/".s:var_name."/".s:template_name."/eg"  
+	"同名变量实现整体替换
+        call cursor(pos,0)
+    endif 
+    if pumvisible()  "存在popup menu改变为选取功能
+	return "\<Down>"
+    endif
+    if search('`<' ) != 0 	
+        normal v
+        call search('>`','e',line('.'))
+	normal y
+	let s:var_name = @"
+ 	return "\<ESC>gvo\<c-g>"
+	"gv选取上一次选取的内容o位置移动到开头，<c-g>切换选取和可视模式，实现直接输入。
+    else
+	if (getline('.')[col('.')-1] == '}') && (getline('.')[col('.')-2] == '{')
+		return "\<ENTER>\<ESC>\<Up>o"
+	endif
+	if (getline('.')[col('.')-2] =~ '\w')&&(getline('.')[col('.')-3] =~ '\w')
+	"输入前两个为字符实现智能补全
+		return "\<C-x>\<C-o>"
+	endif
+        return "\<tab>"
+    endif
+endfunction
+
+function! TemplateComplete()
+    let s:template_name = substitute(getline('.')[:(col('.')-2)],'\zs.*\W\ze\w*$','','g')
+	"\zs表示开头\ze表示结尾，\W匹配单词字母之外的任意字符 \w匹配单词  .*匹配任意字符，$行尾 替换掉了行尾单词前所有内容
+    if has_key(g:template,&ft)
+        if has_key(g:template[&ft],s:template_name)
+	    let s:var_name=""
+            return  "\<c-w>" . g:template[&ft][s:template_name]
+        endif
+    endif
+    if has_key(g:template['_'],s:template_name)
+	let s:var_name=""
+        return  "\<c-w>" . g:template['_'][s:template_name]
+    endif
+    return ""
+endfunction
+
+
+let g:template = {}
+let g:template['_'] = {}
+let g:template['_']['dt'] = "\<c-r>=strftime(\"%Y-%m-%d %H:%M:%S\")"
+
+
+let g:template['c'] = {}
+let g:template['c']['mai'] = "int main(int argc, char \*argv\[\])\<cr>{\<cr>`<1>`\<cr>}"
+let g:template['c']['if']="if(`<1>`)\<cr>{\<cr>`<2>`\<cr>}"
+let g:template['c']['ife']="if(`<1>`)\<cr>{\<cr>`<2>`\<cr>}else\<cr>{\<cr>`<3>`\<cr>}"
+let g:template['c']['whi']="while(`<1>`)\<cr>{\<cr>`<2>`\<cr>}"
+let g:template['c']['dow']="do\<cr>{\<cr>`<1>`\<cr>}while(`<2>`)"
+let g:template['c']['swi']="switch(`<1>`)\<cr>{\<cr>case `<2>`:\<cr>break;\<cr>case `<3>`:\<cr>break;\<cr>case `<4>`:\<cr>break;\<cr>default: `<5>`\<cr>}"
+let g:template['c']['for']="for(`<1>`;`<2>`;`<3>`)\<cr>{\<cr>`<4>`\<cr>}"
+let g:template['cpp'] = g:template['c']
+let g:template['cpp']['foi']="for(int i=0;i<`<1>`;++i)\<cr>{\<cr>`<2>`\<cr>}"
+let g:template['cpp']['cl']="class `<classname>`\<cr>{\<cr>public:\<cr>`<classname>`();\<cr>~`<classname>`();\<cr>private:\<cr>`<1>`\<cr>};"
+let g:template['cpp']['tem']="template<typename T`<1>`>\<cr>`<2>`"
+let g:template['java'] = {}
+let g:template['java'] = g:template['c']
+let g:template['java']['mai'] = "public static void main(String[] arg)\<cr>{\<cr>`<1>`\<cr>}"
+let g:template['java']['cl']="class `<classname>`\<cr>{\<cr>`<1>`\<cr>}"
+let g:template['java']['tem']="class `<classname>`<`<1>`>{\<cr>`<2>`\<cr>}"
+
+
 
 """"""""""""""""""""""""""""""""""below add from gtags.vim"""""""""""""""""""""""""""""""""""
 if exists("loaded_gtags")
