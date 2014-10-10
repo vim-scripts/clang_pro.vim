@@ -157,6 +157,9 @@ func! s:ClangInit()
 			if &filetype == 'cpp'   " Auto completion  cpp
 				inoremap <expr> <buffer> : <SID>CompleteColon()
 			endif
+			let l:src = shellescape(expand('%:p'))
+			let l:command = printf('%s -c -fsyntax-only %s %s &',g:clang_exe,g:clang_options, l:src)
+			let l:clang_output = system(l:command)
 		endif
 	endif
 endf
