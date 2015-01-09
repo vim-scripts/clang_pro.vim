@@ -2,11 +2,11 @@ This is a mirror of http://www.vim.org/scripts/script.php?script_id=4928
 
 This plugin use clang and  javacomplete to auto complete c/c++/java codes ,and use gnu global(work better than cscope for c++ and can work  for java and php) make a project to find define and callers. 
 
-All of the codes in the file are only several hundred lines. So it is small but powerful.Everyone know vim script can read this plugin and change it for yourself. That is vim's power ,do it yourself. I use it work well for ubuntu and old winxp machine, it may work well on macos X too.
+All of the codes in one file . So it is small but powerful.Everyone know vim script can read this plugin and change it for yourself. That is vim's power ,do it yourself. I use it work well for ubuntu and old winxp machine, it may work well on macos X too.
 
-Any one fix bug or use it on mac X give me a email at xieyong88881@163.com  ,i will happy.
+Any one fix bug or use it on mac os give me a email at xieyong88881@163.com  ,i will happy.
 
-For get the all utilities of the plugin,make install clang(apt-get install clang) and gnu global(from src ./configure make install). 
+For get the all utilities of the plugin,make install clang(apt-get install clang) and gnu global(from src ./configure make install). on Windows you must find clang.exe/global.exe for your environment.
 Make  a file  name is clang_pro  at the root of your c/c++/java project.(all source file in it's dir or child dir)
 As default key bindings,when you open a source file(.h .c .cpp .cc .cxx .java)
 push ',' and 'd' keys on the word for define.
@@ -14,12 +14,13 @@ push ',' and 'r' for references.
 push ',' and 'h' for h/c,cpp switch.
 push ',' and 's' for save sessions.
 push ',' and 'l' for load sessions.
-push ',' and 'e' for error info.
-push ',' and 'm' for will build the project using makeprg.
+push ',' and 'e' for error info.(use clang compile for one file find err)
+push ',' and 'm' for will build the project using makeprg.(c/c++ for makefile ,java for ant)
 When add . :: -> complete menu will pop up for you. You can also use key ctrl-x-o make the complete menu pop up manully.
 For new version,add a smart tab complete，can work as ctrl-x-o，select for complete menu,and finish a smart code template for c/c++/java ,you can close it by using let g:clang_auto_tab=0
+try code template,such as write 'mai' and press tab,you can change place with tab again.
 
-clang_pro file will work well for keys ,d ,r ,h ,s ,l functions with nothing in it,but for c/c++/java auto complete,it may need compile info lines like: 
+clang_pro file will work well for keys ,d ,r ,h ,s ,l functions with nothing in it,but for c/c++/java auto complete,it may need compile info lines in clang_pro file, like: 
 "for c/cpp project,notice for cpp need add  stdlib path
 set makeprg=cd\ ~/pro;make 
 let g:clang_options = ' -std=c++11 -I /usr/include/c++/4.8/  -I /usr/include/x86_64-linux-gnu/c++/4.8/   -I  ~/test/cpp/include'
@@ -39,7 +40,7 @@ let g:clang_auto_map=0  "close default keys bindings
 let g:clang_exe= 'clang'  "you can use other clang name
 let g:clang_project = 'clang_pro'   "you can change the project file.
 To other configure, make them in clang_pro file may better.like:
-let g:clang_options = ' -std=c++11 -fms-extensions -fms-compatibility -I "C:\Program Files\Microsoft Visual Studio 10.0\VC\include" '
+let g:clang_options = ' -std=c++11 -fms-extensions -fms-compatibility -I "C:\Program Files\Microsoft Visual Studio 10.0\VC\include" '   (notice this is in windows os using a clang version compiled by vc++)
 let g:clang_use_pch="#include <vector>\n#include <list>"
 
 When the script start ,it will find the clang_pro file and make it work,so can write any vim settings in it .

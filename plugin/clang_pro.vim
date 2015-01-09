@@ -337,6 +337,8 @@ let g:template['c']['whi']="while(`<1>`)\<cr>{\<cr>`<2>`\<cr>}"
 let g:template['c']['dow']="do\<cr>{\<cr>`<1>`\<cr>}while(`<2>`)"
 let g:template['c']['swi']="switch(`<1>`)\<cr>{\<cr>case `<2>`:\<cr>break;\<cr>case `<3>`:\<cr>break;\<cr>case `<4>`:\<cr>break;\<cr>default: `<5>`\<cr>}"
 let g:template['c']['for']="for(`<1>`;`<2>`;`<3>`)\<cr>{\<cr>`<4>`\<cr>}"
+let g:template['c']['ts']="typedef struct{\<cr>};"
+let g:template['c']['te']="typedef enum{\<cr>};"
 let g:template['cpp'] = g:template['c']
 let g:template['cpp']['foi']="for(int i=0;i<`<1>`;++i)\<cr>{\<cr>`<2>`\<cr>}"
 let g:template['cpp']['cl']="class `<classname>`\<cr>{\<cr>public:\<cr>`<classname>`();\<cr>~`<classname>`();\<cr>private:\<cr>`<1>`\<cr>};"
