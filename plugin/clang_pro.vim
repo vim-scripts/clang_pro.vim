@@ -31,13 +31,11 @@ if !exists('g:clang_auto_tab')
 	let g:clang_auto_tab=1
 endif
 
-if !empty('completeopt')
-	exe 'set completeopt=menuone,longest'
-endif
 
 au FileType c,cpp,java call <SID>ClangInit()
 
 func! s:CompleteDot()
+        set completeopt=menuone,longest
 	if getline('.')[col('.') - 2]=~# '[_0-9a-zA-Z]'
 		return ".\<C-x>\<C-o>"
 	endif
@@ -45,6 +43,7 @@ func! s:CompleteDot()
 endf
 
 func! s:CompleteArrow()
+        set completeopt=menuone,longest
 	if getline('.')[col('.') - 2] == '-'
 		return ">\<C-x>\<C-o>"
 	endif
@@ -52,6 +51,7 @@ func! s:CompleteArrow()
 endf
 
 func! s:CompleteColon()
+        set completeopt=menuone,longest
 	if getline('.')[col('.') - 2] == ':'
 		return ":\<C-x>\<C-o>"
 	endif
@@ -140,9 +140,10 @@ func! s:ClangInit()
 	"cd to current sourcefile path for gnu global can work well 
 
 	if &filetype == 'c'
-		let g:clang_options .= ' -x c '
+		let g:clang_options .=  ' '
 	elseif &filetype == 'cpp'
-		let g:clang_options .= ' -x c++ -std=c++11 '
+		"let g:clang_options .= ' -std=c++11'
+		let g:clang_options .= ' '
 	endif
 
 	" Use it when re-initialize plugin if .clang_pro is changed
